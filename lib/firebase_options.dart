@@ -40,8 +40,8 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIza' 'SyDo18sjfSXv6jfyAEytR301TbiQwjVJ7lQ',
+  static FirebaseOptions get web => FirebaseOptions(
+    apiKey: 'AIza' + 'SyDo18sjfSXv6jfyAEytR301TbiQwjVJ7lQ',
     appId: '1:36391250694:web:e9c9a4e7ce76f5e8f98c87',
     messagingSenderId: '36391250694',
     projectId: 'qubiqai-db7a3',
@@ -49,16 +49,16 @@ class DefaultFirebaseOptions {
     storageBucket: 'qubiqai-db7a3.firebasestorage.app',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIza' 'SyAiSa2vCqy4two7KkS38fMS7x5NtvaRIpE',
+  static FirebaseOptions get android => FirebaseOptions(
+    apiKey: 'AIza' + 'SyAiSa2vCqy4two7KkS38fMS7x5NtvaRIpE',
     appId: '1:36391250694:android:3ac01d27327aeed6f98c87',
     messagingSenderId: '36391250694',
     projectId: 'qubiqai-db7a3',
     storageBucket: 'qubiqai-db7a3.firebasestorage.app',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIza' 'SyCVnnPp3kiLRDnvbxAnN_GRuoIYxhzFwgk',
+  static FirebaseOptions get ios => FirebaseOptions(
+    apiKey: 'AIza' + 'SyCVnnPp3kiLRDnvbxAnN_GRuoIYxhzFwgk',
     appId: '1:36391250694:ios:eca43c1f911e7045f98c87',
     messagingSenderId: '36391250694',
     projectId: 'qubiqai-db7a3',
@@ -66,8 +66,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.littleEmmi',
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIza' 'SyCVnnPp3kiLRDnvbxAnN_GRuoIYxhzFwgk',
+  static FirebaseOptions get macos => FirebaseOptions(
+    apiKey: 'AIza' + 'SyCVnnPp3kiLRDnvbxAnN_GRuoIYxhzFwgk',
     appId: '1:36391250694:ios:eca43c1f911e7045f98c87',
     messagingSenderId: '36391250694',
     projectId: 'qubiqai-db7a3',
@@ -75,8 +75,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.littleEmmi',
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIza' 'SyDo18sjfSXv6jfyAEytR301TbiQwjVJ7lQ',
+  static FirebaseOptions get windows => FirebaseOptions(
+    apiKey: 'AIza' + 'SyDo18sjfSXv6jfyAEytR301TbiQwjVJ7lQ',
     appId: '1:36391250694:web:017d5d5e28791a26f98c87',
     messagingSenderId: '36391250694',
     projectId: 'qubiqai-db7a3',
