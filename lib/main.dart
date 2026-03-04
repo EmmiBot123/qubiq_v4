@@ -44,6 +44,8 @@ import 'package:little_emmi/Screens/html_learning_webview_screen.dart';
 import 'package:little_emmi/Screens/paint_webview_screen.dart';
 import 'package:little_emmi/Screens/keyboard_game_webview_screen.dart';
 import 'package:little_emmi/Screens/powerpoint_app_webview_screen.dart';
+import 'package:little_emmi/Screens/drone_block_webview_screen.dart';
+import 'package:little_emmi/Screens/emmi_core_webview_screen.dart';
 
 import 'package:little_emmi/Services/keep_alive_service.dart';
 
@@ -90,6 +92,8 @@ class QubiQApp extends StatelessWidget {
           '/app/paint': (_) => const PaintWebViewScreen(),
           '/app/keyboard_game': (_) => const KeyboardGameWebViewScreen(),
           '/app/powerpoint_app': (_) => const PowerPointAppWebViewScreen(),
+          '/app/drone_block': (_) => const DroneBlockWebViewScreen(),
+          '/app/emmi_core': (_) => const EmmiCoreWebViewScreen(),
           '/app/robot_workspace': (_) => const Scaffold(
                 body: SafeArea(
                   child: Column(

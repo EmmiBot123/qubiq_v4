@@ -283,6 +283,17 @@ flutter:
     - assets/paint/
     - assets/keyboard_game/
     - assets/powerpoint_app/
+    - assets/drone_block_coding/
+    - assets/drone_block_coding/assets/
+    - assets/drone_block_coding/media/
+    - assets/emmi_core/
+    - assets/emmi_core/assets/
+    - assets/emmi_core/blocs/
+    - assets/emmi_core/examples/
+    - assets/emmi_core/lang/
+    - assets/emmi_core/media/
+    - assets/emmi_core/toolbox/
+    - assets/emmi_core/vendor/
 
   #   - images/a_dot_ham.jpeg
 

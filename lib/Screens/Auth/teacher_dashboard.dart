@@ -98,7 +98,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
     'Qubiq Studio',
     'English', "Math's", 'IT', 'Social Science', 'Science',
     'AR Studio',
-    'HTML Learning', 'Paint', 'Keyboard Game', 'PowerPoint App'
+    'HTML Learning', 'Paint', 'Keyboard Game', 'PowerPoint App', 'Drone Block Coding', 'Emmi Core'
   ];
   List<String> _allowedAppsForCurrentClass = [];
   bool _isLoadingAppPermissions = false;

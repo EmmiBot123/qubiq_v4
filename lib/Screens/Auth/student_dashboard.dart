@@ -474,7 +474,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
           title: 'PowerPoint',
           subtitle: 'Create Slides',
           imagePath: 'assets/images/ppt.png',
-          onTap: () => Navigator.pushNamed(context, '/presentation_normal')),
+          onTap: () => Navigator.pushNamed(context, '/app/powerpoint_app')),
       DashboardItem(
           title: 'Excel',
           subtitle: 'Spreadsheets',
@@ -562,19 +562,11 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
                   builder: (context) => const InAppWebViewScreen(
                       url: 'https://staging.d1atsf4l0agpui.amplifyapp.com/',
                       title: 'Emmi Vibe')))),
-      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows)
-        DashboardItem(
-            title: 'Emmi Core',
-            subtitle: 'Robot Manager',
-            imagePath: 'assets/images/emmi.png',
-            onTap: _launchEmmiV2App)
-      else
-        DashboardItem(
-            title: 'Emmi Core',
-            subtitle: 'Windows Only',
-            imagePath: 'assets/images/emmi.png',
-            onTap: () =>
-                _showComingSoon(context, "Emmi Core (Windows Desktop Only)")),
+      DashboardItem(
+          title: 'Emmi Core',
+          subtitle: 'Robot Manager',
+          imagePath: 'assets/images/emmi.png',
+          onTap: () => Navigator.pushNamed(context, '/app/emmi_core')),
       DashboardItem(
           title: 'Little Emmi',
           subtitle: 'Robot Learning',
@@ -582,10 +574,16 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
           onTap: () => Navigator.pushNamed(context, '/app/robot_workspace')),
       DashboardItem(
           title: 'Drone Tuning',
-          subtitle: 'Upcoming',
+          subtitle: 'Block Coding',
           icon: Icons.flight_takeoff,
           iconColor: Colors.lightGreen,
-          onTap: () => _showComingSoon(context, "Drone Tuning")),
+          onTap: () => Navigator.pushNamed(context, '/app/drone_block')),
+      DashboardItem(
+          title: 'Drone Block Coding',
+          subtitle: 'AeroBlock IDE',
+          icon: Icons.code,
+          iconColor: Colors.cyan,
+          onTap: () => Navigator.pushNamed(context, '/app/drone_block')),
     ];
 
     // 7. AI Training Tools
@@ -689,14 +687,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
               context, MaterialPageRoute(builder: (context) => ARDashboard()))),
     ];
 
-    // 11. Learning Tools
-    final List<DashboardItem> learningToolsApps = [
-      DashboardItem(
-          title: 'HTML Learning',
-          subtitle: 'HTML/CSS Lab',
-          icon: Icons.code,
-          iconColor: Colors.deepOrange,
-          onTap: () => Navigator.pushNamed(context, '/app/html_learning')),
+    // 11. Games
+    final List<DashboardItem> gamesApps = [
       DashboardItem(
           title: 'Paint',
           subtitle: 'KidsPaint Studio',
@@ -709,12 +701,16 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
           icon: Icons.keyboard,
           iconColor: Colors.purple,
           onTap: () => Navigator.pushNamed(context, '/app/keyboard_game')),
+    ];
+
+    // 12. Web Dev Learning
+    final List<DashboardItem> webDevApps = [
       DashboardItem(
-          title: 'PowerPoint App',
-          subtitle: 'Presentations',
-          icon: Icons.slideshow,
-          iconColor: Colors.red,
-          onTap: () => Navigator.pushNamed(context, '/app/powerpoint_app')),
+          title: 'HTML Learning',
+          subtitle: 'HTML/CSS Lab',
+          icon: Icons.code,
+          iconColor: Colors.deepOrange,
+          onTap: () => Navigator.pushNamed(context, '/app/html_learning')),
     ];
 
     final List<_CategoryTile> categories = [
@@ -749,7 +745,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
       _CategoryTile(
           name: "10. AR Tools", color: Colors.pinkAccent, items: arApps),
       _CategoryTile(
-          name: "11. Learning Tools", color: Colors.lime, items: learningToolsApps),
+          name: "11. Games", color: Colors.lime, items: gamesApps),
+      _CategoryTile(
+          name: "12. Web Dev Learning", color: Colors.lightBlue, items: webDevApps),
     ];
 
     // Filter categories based on approved apps
