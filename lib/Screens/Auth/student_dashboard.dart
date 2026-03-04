@@ -571,7 +571,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
           title: 'Little Emmi',
           subtitle: 'Robot Learning',
           imagePath: 'assets/images/littleemmi.png',
-          onTap: () => Navigator.pushNamed(context, '/app/robot_workspace')),
+          onTap: () => Navigator.pushNamed(context, '/app/emmi_lite')),
       DashboardItem(
           title: 'Drone Tuning',
           subtitle: 'Block Coding',

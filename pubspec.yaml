@@ -286,6 +286,13 @@ flutter:
     - assets/drone_block_coding/
     - assets/drone_block_coding/assets/
     - assets/drone_block_coding/media/
+    - assets/emmi_lite/
+    - assets/emmi_lite/blocks/
+    - assets/emmi_lite/css/
+    - assets/emmi_lite/headers/
+    - assets/emmi_lite/js/
+    - assets/emmi_lite/lib/
+    - assets/emmi_lite/media/
     - assets/emmi_core/
     - assets/emmi_core/assets/
     - assets/emmi_core/blocs/
