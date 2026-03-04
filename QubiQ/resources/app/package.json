@@ -1,0 +1,26 @@
+{
+  "name": "ottoblockly",
+  "version": "1.5.0",
+  "description": "Blockly and Arduino coding standalone App for Otto DIY robot",
+  "author": "Otto DIY and Builder community",
+  "license": "GPL-2.0",
+  "main": "electronApp.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OttoDIY/blockly"
+  },
+  "bugs": {
+    "url": "https://github.com/OttoDIY/blockly/issues"
+  },
+  "dependencies": {
+    "ajv": "^6.10.0",
+    "child_process": "1.0.2",
+    "dotenv": "^17.2.1",
+    "electron-updater": "^4.0.6",
+    "fetch-blob": "^2.1.2",
+    "formdata-node": "^4.0.0",
+    "node-fetch": "^2.7.0",
+    "openai": "^4.0.0",
+    "serialport": "^7.1.4"
+  }
+}

@@ -1,0 +1,365 @@
+@use '../styles/variables' as *;
+
+.ribbon {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid $brand-border;
+    background-color: white;
+}
+
+.tabs {
+    display: flex;
+    background-color: $header-bg;
+    padding: 0 10px;
+    height: 30px;
+}
+
+.tab {
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    cursor: pointer;
+    color: $brand-black;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.4);
+    }
+
+    &.active {
+        background: white;
+        border: 1px solid $brand-border;
+        border-bottom: none;
+        position: relative;
+        top: 1px;
+        font-weight: 500;
+        color: $brand-primary;
+    }
+}
+
+.toolbar {
+    display: flex;
+    align-items: stretch;
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    gap: 15px;
+    min-height: 90px;
+}
+
+.group {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.groupLabel {
+    font-size: 11px;
+    color: $gray-500;
+    margin-top: 4px;
+}
+
+.divider {
+    width: 1px;
+    background-color: $brand-border;
+    margin: 5px 0;
+}
+
+.dividerSmall {
+    width: 1px;
+    background-color: $brand-border;
+    height: 20px;
+}
+
+/* Clipboard Group */
+.clipboardGrid {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mainAction {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+
+    span {
+        font-size: 11px;
+        margin-top: 2px;
+    }
+
+    &:hover {
+        background-color: $selection-bg;
+    }
+}
+
+.sideActions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Font Group */
+.fontControls {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.fontRow {
+    display: flex;
+    gap: 4px;
+}
+
+.fontSelect {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    padding: 2px 4px;
+    font-size: 12px;
+    width: 100px;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.4);
+        border-color: $brand-border;
+    }
+}
+
+.fontSizeSelect {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    padding: 2px 4px;
+    font-size: 12px;
+    width: 45px;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.4);
+        border-color: $brand-border;
+    }
+}
+
+.buttonRow {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+
+/* Alignment Group */
+.alignmentGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+}
+
+.toolBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 26px;
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    color: $brand-black;
+
+    &:hover {
+        background-color: $selection-bg;
+        border-color: $selection-border;
+    }
+
+    &:active {
+        background-color: rgba(79, 70, 229, 0.2);
+    }
+}
+
+.activeBtn {
+    background-color: rgba(79, 70, 229, 0.15);
+    border-color: $selection-border;
+    color: $brand-primary;
+}
+
+.toolBtnLarge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    font-size: 11px;
+    color: $brand-black;
+    cursor: pointer;
+    border-radius: 4px;
+    gap: 4px;
+    min-width: 60px;
+    transition: 0.2s ease;
+
+    &:hover {
+        background-color: $selection-bg;
+    }
+
+    span {
+        font-size: 10px;
+    }
+}
+
+.verticalGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.iconGridCompact {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2px;
+}
+
+.toolBtnSmall {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 6px;
+    font-size: 11px;
+    color: $brand-black;
+    cursor: pointer;
+    border-radius: 3px;
+    white-space: nowrap;
+
+    &:hover {
+        background-color: $selection-bg;
+    }
+}
+
+.chartGroup {
+    display: flex;
+    gap: 4px;
+}
+
+.iconGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+}
+
+.fileBackstage {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    z-index: 1000;
+    display: flex;
+    animation: slideDown 0.2s ease-out;
+
+    .backstageSidebar {
+        width: 250px;
+        background-color: $brand-primary;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0;
+
+        .sidebarItem {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+
+            &.activeItem {
+                background-color: white;
+                color: $brand-primary;
+                font-weight: 500;
+            }
+        }
+
+        .sidebarDivider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 10px 0;
+        }
+    }
+
+    .backstageContent {
+        flex: 1;
+        padding: 40px;
+        background-color: #f3f2f1;
+        overflow-y: auto;
+
+        .contentHeader {
+            margin-bottom: 40px;
+
+            h1 {
+                font-weight: 300;
+                font-size: 32px;
+                color: #323130;
+            }
+        }
+
+        .templateSection {
+            h3 {
+                font-weight: 600;
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+
+            .templateGrid {
+                display: flex;
+                gap: 20px;
+
+                .templateCard {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    cursor: pointer;
+
+                    .templateThumb {
+                        width: 160px;
+                        height: 100px;
+                        background: white;
+                        border: 1px solid $brand-border;
+                        border-radius: 2px;
+                        transition: box-shadow 0.2s;
+
+                        &:hover {
+                            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                        }
+                    }
+
+                    span {
+                        font-size: 12px;
+                        color: #323130;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-2%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

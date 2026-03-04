@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="PyLearn IDE — A browser-based Python IDE for students" />
+  <title>PyLearn IDE 🐍</title>
+
+  <!--
+    ══════════════════════════════════════════════════════════════
+    CROSS-ORIGIN ISOLATION (required by Pyodide / SharedArrayBuffer)
+    This script installs a Service Worker that injects:
+      Cross-Origin-Opener-Policy: same-origin
+      Cross-Origin-Embedder-Policy: require-corp
+    on every response, enabling SharedArrayBuffer in all contexts
+    (Chrome, macOS WebView, Windows WebView via flutter_inappwebview).
+    ══════════════════════════════════════════════════════════════
+  -->
+  <script>
+    if ('serviceWorker' in navigator && !window.crossOriginIsolated) {
+      navigator.serviceWorker.register('./sw.js').then(reg => {
+        console.log("Service worker registered for CORS headers.");
+        // We disabled the eager location.reload() here because inside a
+        // Flutter Web iframe, crossOriginIsolated might ALWAYS be false,
+        // which was causing an infinite reload loop resulting in a blank screen.
+        // Pyodide gracefully falls back to a non-SharedArrayBuffer build if needed.
+      }).catch(err => console.warn('SW registration failed:', err));
+    }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="stylesheet" href="ide.css" />
+
+  <!--
+    Monaco Editor loader (CDN).
+    Uses AMD loader pattern — must be synchronous <script>.
+  -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs/loader.js"></script>
+
+  <!-- Pyodide Python Runtime -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+
+  <!-- Student Code Templates -->
+  <script src="templates.js?v=2"></script>
+</head>
+
+<body>
+
+  <!-- ══ Loading Screen ══ -->
+  <div id="loading-screen">
+    <div class="loader-logo">🐍</div>
+    <div style="font-size:22px;font-weight:700;color:var(--text-primary);font-family:var(--font-ui)">
+      PyLearn IDE
+    </div>
+    <div class="loader-bar-wrap">
+      <div class="loader-bar" id="loader-bar"></div>
+    </div>
+    <div class="loader-text" id="loader-text">Initializing…</div>
+  </div>
+
+  <!-- ══ App Shell ══ -->
+  <div id="app" class="hidden">
+
+    <!-- ── Top Bar ── -->
+    <header id="topbar">
+      <div class="topbar-logo">
+        <span>🐍</span>
+        <span class="logo-text">PyLearn IDE</span>
+      </div>
+
+      <div class="topbar-actions">
+        <!-- Sidebar toggle -->
+        <button class="btn-icon" id="btn-sidebar" data-tip="Toggle Sidebar">
+          ☰
+        </button>
+
+        <!-- Run / Stop -->
+        <button class="btn btn-primary" id="btn-run" title="Run (Ctrl+Enter)">
+          <span>▶</span> <span>Run</span>
+        </button>
+        <button class="btn btn-danger" id="btn-stop" title="Stop execution" style="display:none">
+          <span>■</span> <span>Stop</span>
+        </button>
+
+        <!-- New file -->
+        <button class="btn btn-ghost" id="btn-new-file" data-tip="New File">
+          <span>＋</span> <span>New File</span>
+        </button>
+
+        <span id="run-time"></span>
+      </div>
+
+      <div class="topbar-right">
+        <!-- Font size -->
+        <div class="font-size-ctrl">
+          <button class="btn-icon" id="btn-font-down" data-tip="Decrease Font Size">A−</button>
+          <span id="font-size-display">14</span>
+          <button class="btn-icon" id="btn-font-up" data-tip="Increase Font Size">A+</button>
+        </div>
+
+        <!-- Theme toggle -->
+        <button class="btn-icon" id="btn-theme" data-tip="Light Mode">☀️</button>
+
+        <!-- Keyboard shortcuts -->
+        <button class="btn-icon" id="btn-shortcuts" data-tip="Keyboard Shortcuts">⌨️</button>
+      </div>
+    </header>
+
+    <!-- ── Sidebar ── -->
+    <aside id="sidebar">
+
+      <!-- Files section -->
+      <div class="sidebar-section" style="flex:1;min-height:0;display:flex;flex-direction:column">
+        <div class="sidebar-header">
+          Files
+          <button class="btn-icon" id="btn-new-file-sidebar" title="New File"
+            onclick="document.getElementById('btn-new-file').click()">＋</button>
+        </div>
+        <div id="file-tree"></div>
+      </div>
+
+      <!-- Templates section -->
+      <div class="sidebar-section" style="flex-shrink:0">
+        <div class="sidebar-header">Templates</div>
+        <div id="templates-list"></div>
+      </div>
+
+    </aside>
+
+    <!-- ── Main Editor + Console ── -->
+    <main id="main">
+
+      <!-- Tabs -->
+      <div id="tabs-bar">
+        <div id="new-tab-btn" title="New file">＋</div>
+      </div>
+
+      <!-- Editor panel -->
+      <div id="editor-panel">
+        <div id="monaco-editor"></div>
+      </div>
+
+      <!-- Resize handle -->
+      <div id="resize-handle" title="Drag to resize"></div>
+
+      <!-- Output console -->
+      <div id="output-panel">
+        <div class="output-header">
+          <span class="output-title">Console</span>
+          <div class="output-tabs">
+            <span class="output-tab active">Output</span>
+          </div>
+          <button class="btn-icon" id="btn-clear" data-tip="Clear Console" style="font-size:13px">🗑</button>
+        </div>
+        <div id="output-content">
+          <div class="sys-line">▸ PyLearn IDE ready. Press ▶ Run or Ctrl+Enter to execute your code.</div>
+        </div>
+        <!-- Input prompt (shown when input() is called) -->
+        <div id="input-prompt-wrap">
+          <span id="input-prompt-label">▶</span>
+          <input id="input-prompt-field" type="text" autocomplete="off" spellcheck="false"
+            placeholder="Type here and press Enter…" />
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ── Status Bar ── -->
+    <footer id="statusbar">
+      <div class="status-item" id="status-python">🐍 Python</div>
+      <div class="status-item loading" id="status-ready">Loading…</div>
+      <div class="status-item" id="status-file">main.py</div>
+      <div class="status-item" id="status-cursor">Ln 1, Col 1</div>
+      <div class="status-spacer"></div>
+      <div class="status-item" style="opacity: 0.6;">PyLearn IDE v1.0 · For Students</div>
+    </footer>
+
+  </div><!-- /#app -->
+
+  <!-- ══ Modals ══ -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <h3 id="modal-title">New File</h3>
+      <div id="modal-label" style="font-size:12px;color:var(--text-secondary);margin-bottom:8px">Enter filename:</div>
+      <input class="modal-input" id="modal-input" type="text" spellcheck="false" />
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="modal-cancel">Cancel</button>
+        <button class="btn btn-primary" id="modal-ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Keyboard Shortcuts Panel ══ -->
+  <div id="shortcuts-panel">
+    <div class="shortcuts-header">
+      ⌨️ Keyboard Shortcuts
+      <button class="btn-icon" id="shortcuts-close">✕</button>
+    </div>
+    <div class="shortcuts-body">
+      <div class="shortcut-group">
+        <div class="shortcut-group-title">Execution</div>
+        <div class="shortcut-row"><span>Run code</span><kbd>Ctrl</kbd><kbd>Enter</kbd></div>
+        <div class="shortcut-row"><span>Run code (Mac)</span><kbd>⌘</kbd><kbd>Enter</kbd></div>
+      </div>
+      <div class="shortcut-group">
+        <div class="shortcut-group-title">Editor</div>
+        <div class="shortcut-row"><span>Save file</span><kbd>Ctrl</kbd><kbd>S</kbd></div>
+        <div class="shortcut-row"><span>Undo</span><kbd>Ctrl</kbd><kbd>Z</kbd></div>
+        <div class="shortcut-row"><span>Redo</span><kbd>Ctrl</kbd><kbd>Y</kbd></div>
+        <div class="shortcut-row"><span>Find</span><kbd>Ctrl</kbd><kbd>F</kbd></div>
+        <div class="shortcut-row"><span>Replace</span><kbd>Ctrl</kbd><kbd>H</kbd></div>
+        <div class="shortcut-row"><span>Select All</span><kbd>Ctrl</kbd><kbd>A</kbd></div>
+        <div class="shortcut-row"><span>Duplicate Line</span><kbd>Alt</kbd><kbd>Shift</kbd><kbd>↓</kbd></div>
+        <div class="shortcut-row"><span>Move Line Up/Down</span><kbd>Alt</kbd><kbd>↑/↓</kbd></div>
+        <div class="shortcut-row"><span>Toggle Comment</span><kbd>Ctrl</kbd><kbd>/</kbd></div>
+        <div class="shortcut-row"><span>Indent</span><kbd>Tab</kbd></div>
+        <div class="shortcut-row"><span>Outdent</span><kbd>Shift</kbd><kbd>Tab</kbd></div>
+        <div class="shortcut-row"><span>Format Code</span><kbd>Shift</kbd><kbd>Alt</kbd><kbd>F</kbd></div>
+        <div class="shortcut-row"><span>Multi-cursor</span><kbd>Alt</kbd><kbd>Click</kbd></div>
+        <div class="shortcut-row"><span>Go to Line</span><kbd>Ctrl</kbd><kbd>G</kbd></div>
+      </div>
+      <div class="shortcut-group">
+        <div class="shortcut-group-title">Navigation</div>
+        <div class="shortcut-row"><span>Command Palette</span><kbd>F1</kbd></div>
+        <div class="shortcut-row"><span>Go to Definition</span><kbd>F12</kbd></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Main Script ══ -->
+  <script src="ide.js?v=2"></script>
+
+</body>
+
+</html>

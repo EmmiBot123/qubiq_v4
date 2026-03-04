@@ -1,0 +1,6 @@
+owner: OttoDIY
+repo: blockly
+provider: github
+token: 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
+releaseType: release
+updaterCacheDirName: ottoblockly-updater

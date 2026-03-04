@@ -1,0 +1,63 @@
+plugins {
+    id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    // END: FlutterFire Configuration
+
+    // ✅ UPDATED: Use the modern Kotlin plugin ID
+    id "org.jetbrains.kotlin.android"
+
+    id "dev.flutter.flutter-gradle-plugin"
+
+    // ✅ Chaquopy Plugin
+    id "com.chaquo.python"
+}
+
+android {
+    namespace = "com.example.little_emmi"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    // Force older compatible versions (Keep this if it solves your specific crash)
+    configurations.all {
+        resolutionStrategy {
+            force 'androidx.activity:activity:1.10.1'
+            force 'androidx.activity:activity-ktx:1.10.1'
+        }
+    }
+
+    defaultConfig {
+        applicationId = "com.example.little_emmi"
+        minSdk = 24
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+
+        // Chaquopy Configuration
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+        python {
+            version "3.8"
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}

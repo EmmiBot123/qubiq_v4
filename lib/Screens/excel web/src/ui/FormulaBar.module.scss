@@ -1,0 +1,77 @@
+@use '../styles/variables' as *;
+
+.formulaBar {
+    height: $formula-bar-height;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid $brand-border;
+    background: white;
+}
+
+.addressBox {
+    width: 60px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid $brand-border;
+    font-size: 13px;
+    color: $brand-primary;
+    font-weight: 600;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+    height: 100%;
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &.cancel:hover {
+            color: #d13438;
+            background: #fde7e9;
+        }
+
+        &.confirm:hover {
+            color: #107c10;
+            background: #dff6dd;
+        }
+    }
+}
+
+.fxDivider {
+    width: 1px;
+    height: 16px;
+    background: #edebe9;
+    margin: 0 8px;
+}
+
+.fx {
+    font-size: 16px;
+    color: #605e5c;
+    cursor: pointer;
+    padding: 0 8px;
+    border-radius: 4px;
+    font-family: 'Times New Roman', Times, serif;
+
+    &:hover {
+        background: #f3f3f3;
+    }
+}
+
+.input {
+    flex: 1;
+    height: 100%;
+    padding: 0 10px;
+    font-size: 13px;
+    color: $brand-black;
+}
