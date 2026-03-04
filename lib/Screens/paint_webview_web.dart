@@ -21,7 +21,13 @@ class _PaintWebViewPlatformComponentState
       viewId,
       (int viewId) {
         final web.HTMLIFrameElement iframe = web.HTMLIFrameElement();
-        iframe.src = 'assets/assets/paint/paint.html';
+        // Dynamic path resolution for GitHub Pages subdirectories
+        final String currentUrl = web.window.location.href;
+        final String baseUrl = currentUrl.contains('#') 
+            ? currentUrl.substring(0, currentUrl.indexOf('#'))
+            : currentUrl;
+        final String cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl : '$baseUrl/';
+        iframe.src = '${cleanBaseUrl}assets/assets/paint/paint.html';
         iframe.style.border = 'none';
         iframe.style.width = '100%';
         iframe.style.height = '100%';
