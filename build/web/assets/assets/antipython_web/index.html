@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PytonCode - Student AI Coding</title>
+    <!-- Fonts -->
+    <link rel="stylesheet" href="lib/fonts/fonts.css">
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            src: url('lib/fonts/Inter-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Fira Code';
+            src: url('lib/fonts/FiraCode-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+    <!-- Lucide Icons -->
+    <!-- Lucide Icons -->
+    <script src="lib/lucide/lucide.min.js"></script>
+    <!-- Skulpt (Local) -->
+    <script src="lib/skulpt/skulpt.min.js"></script>
+    <script src="lib/skulpt/skulpt-stdlib.js"></script>
+
+    <!-- Plotting Support (Chart.js + Skulpt Wrapper) -->
+    <script src="lib/skulpt/chart.min.js"></script>
+    <script src="lib/skulpt/plt_wrapper.js?v=2"></script>
+
+    <!-- Monaco Editor (Loader at the end to avoid AMD conflicts) -->
+    <!-- Monaco Editor (Loader at the end to avoid AMD conflicts) -->
+    <script src="lib/monaco/vs/loader.js"></script>
+
+    <!-- Mocks -->
+    <script src="lib/skulpt/mysql_mock.js"></script>
+    <script src="lib/skulpt/ai_ds_mocks.js?v=8"></script>
+
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <i data-lucide="terminal"></i>
+            <span>PytonCode</span>
+        </div>
+        <div class="controls">
+            <a href="settings.html" class="theme-toggle" title="Settings"
+                style="display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                <i data-lucide="settings"></i>
+            </a>
+            <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">
+                <i data-lucide="moon" id="theme-icon"></i>
+            </button>
+            <button class="btn" id="serial-btn"
+                style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-color);">
+                <i data-lucide="unplug" id="serial-icon"></i>
+                Connect
+            </button>
+            <button class="btn btn-primary" id="stop-btn"
+                style="background-color: #ef4444; border-color: #ef4444; display: none;">
+                <i data-lucide="square"></i>
+                Stop
+            </button>
+            <button class="btn btn-primary" id="run-btn">
+                <i data-lucide="play"></i>
+                Run Code
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- AI Chat Assistant -->
+        <section class="chat-panel">
+            <div class="panel-header">
+                <span>AI Assistant</span>
+                <i data-lucide="sparkles" size="18"></i>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message ai">
+                    Hello! I'm your Python tutor. How can I help you today? You can ask me to explain code or give you a
+                    challenge!
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="chat-input" placeholder="Ask me anything about Python...">
+                <button class="btn btn-primary" id="chat-send">
+                    <i data-lucide="send"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Resizer Left -->
+        <div class="resizer" id="resizer-left"></div>
+
+        <!-- Code Editor -->
+        <section class="editor-panel">
+            <div class="panel-header">
+                <span>main.py</span>
+                <i data-lucide="code" size="18"></i>
+            </div>
+            <div id="editor-container"></div>
+        </section>
+
+        <!-- Resizer Right -->
+        <div class="resizer" id="resizer-right"></div>
+
+        <!-- Output/Console -->
+        <section class="output-panel">
+            <div class="panel-header">
+                <span>Console Output</span>
+                <i data-lucide="layout-list" size="18"></i>
+            </div>
+            <pre id="output-console">Python 3.x Output will appear here...</pre>
+        </section>
+    </main>
+
+    <!-- Input Modal -->
+    <div id="input-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 id="modal-prompt">Python Input:</h3>
+            <input type="text" id="modal-input" placeholder="Type here...">
+            <div class="modal-actions">
+                <button id="modal-submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden File Input for Tkinter Mock -->
+    <input type="file" id="python-file-input" style="display: none;" accept=".jpg,.jpeg,.png,.gif,.txt,.csv,.py">
+
+    <!-- Webcam Elements (Hidden) -->
+    <video id="webcam-video" autoplay playsinline style="display: none;"></video>
+    <canvas id="webcam-canvas" style="display: none;"></canvas>
+
+    <!-- Plot Modal -->
+    <div id="plotModal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 800px; width: 90%;">
+            <div class="modal-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3>Visualization</h3>
+                <button id="closeModal" class="btn btn-small"
+                    style="background: transparent; border: none; font-size: 1.5rem; color: var(--text-color); cursor: pointer;">&times;</button>
+            </div>
+            <div id="modalCanvasContainer" style="height: 500px; width: 100%;"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
