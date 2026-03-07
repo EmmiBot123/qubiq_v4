@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"new Function\\(require\\(''fs''\\).readFileSync\\(''C:/Users/USER/.vscode/Projects/EMMI_HTML/js/generators/python.js'', ''utf8''\\)\\)\")",
+      "Bash(node -e \"new Function\\(require\\(''fs''\\).readFileSync\\(''C:/Users/USER/.vscode/Projects/EMMI_HTML/js/generators/java.js'', ''utf8''\\)\\)\")",
+      "Bash(node -e \"new Function\\(require\\(''fs''\\).readFileSync\\(''C:/Users/USER/.vscode/Projects/EMMI_HTML/js/generators/variable_generators.js'', ''utf8''\\)\\)\")",
+      "Bash(node -e \"new Function\\(require\\(''fs''\\).readFileSync\\(''C:/Users/USER/.vscode/Projects/EMMI_HTML/js/generators/communication_generators.js'', ''utf8''\\)\\)\")",
+      "Bash(node -e \"new Function\\(require\\(''fs''\\).readFileSync\\(''C:/Users/USER/.vscode/Projects/EMMI_HTML/js/generators/emmi-bot-v2_generators.js'', ''utf8''\\)\\)\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)",
+      "Bash(curl -sL \"https://unpkg.com/blockly/blockly.min.js\" -o \"C:/Users/USER/.vscode/Projects/EMMI_HTML/lib/blockly/blockly.min.js\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css\" -o \"themes/prism.min.css\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js\" -o \"prism.min.js\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js\" -o \"components/prism-c.min.js\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js\" -o \"components/prism-cpp.min.js\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js\" -o \"components/prism-python.min.js\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js\" -o \"components/prism-java.min.js\")",
+      "Bash(ls -la *.js themes/*.css components/*.js)",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css\" -o \"C:/Users/USER/.vscode/Projects/EMMI_HTML/lib/font-awesome/css/all.min.css\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-brands-400.woff2\" -o \"fa-brands-400.woff2\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-brands-400.ttf\" -o \"fa-brands-400.ttf\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-regular-400.woff2\" -o \"fa-regular-400.woff2\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-regular-400.ttf\" -o \"fa-regular-400.ttf\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2\" -o \"fa-solid-900.woff2\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.ttf\" -o \"fa-solid-900.ttf\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-v4compatibility.woff2\" -o \"fa-v4compatibility.woff2\")",
+      "Bash(curl -sL \"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-v4compatibility.ttf\" -o \"fa-v4compatibility.ttf\")"
+    ]
+  }
+}

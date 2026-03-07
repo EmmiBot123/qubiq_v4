@@ -1,0 +1,63 @@
+@use './styles/variables' as *;
+
+.app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: white;
+}
+
+.header {
+    background-color: $brand-primary;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    color: white;
+    font-size: 12px;
+}
+
+.main {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+}
+
+.footer {
+    height: $sheet-tabs-height;
+    background-color: $header-bg;
+    border-top: 1px solid $brand-border;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sheetTabs {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.sheetTabActive {
+    background: white;
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    border-top: 2px solid $brand-primary;
+    color: $brand-primary;
+}
+
+.addSheet {
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.statusBar {
+    font-size: 11px;
+    padding: 0 15px;
+    color: $gray-500;
+}

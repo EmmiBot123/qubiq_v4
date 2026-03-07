@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Creator Tool - EMMI BOT</title>
+    <link rel="icon" type="image/png" href="media/logo.png">
+    <link rel="stylesheet" href="lib/font-awesome/css/all.min.css">
+    <script src="lib/blockly/blockly.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/block-creator.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="creator-header">
+        <div class="header-left">
+            <div class="logo">
+                <img src="media/logo.png" alt="Logo" onerror="this.style.display='none'">
+            </div>
+            <h1>Block Creator Tool</h1>
+        </div>
+        <div class="header-actions">
+            <button id="btn-cloud-settings" class="btn btn-info" title="Configure AWS Cloud Settings">
+                <i class="fas fa-cloud"></i> Cloud Settings
+            </button>
+            <button id="btn-sync-server" class="btn btn-success" title="Save & Sync files to the running app">
+                <i class="fas fa-sync-alt"></i> Sync
+            </button>
+            <button id="btn-export-app" class="btn btn-secondary" title="Download EMMI BOT Lite as a ZIP">
+                <i class="fas fa-file-archive"></i> Export App
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="creator-body">
+        <!-- Sidebar: Tree Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Blocks</h2>
+                <div class="sidebar-actions">
+                    <button id="btn-add-board" class="btn-icon" title="Add New Board">
+                        <i class="fas fa-microchip"></i>
+                    </button>
+                    <button id="btn-add-category" class="btn-icon" title="Add New Category">
+                        <i class="fas fa-folder-plus"></i>
+                    </button>
+                    <button id="btn-add-block" class="btn-icon" title="Add New Block">
+                        <i class="fas fa-cube"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="tree-container" class="tree-container">
+                <!-- Tree rendered by JS -->
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Empty State -->
+            <div id="empty-state" class="empty-state-full">
+                <i class="fas fa-cube"></i>
+                <h2>Block Creator</h2>
+                <p>Select a block from the sidebar, or create a new one.</p>
+                <p class="hint">Write JavaScript to define Blockly blocks with a live preview.</p>
+            </div>
+
+            <!-- Editor Area (shown when block is selected) -->
+            <div id="editor-area" class="editor-area hidden">
+                <!-- Block Info Bar -->
+                <div class="block-info-bar">
+                    <span id="block-path" class="block-path"></span>
+                    <div class="block-info-actions">
+                        <button id="btn-rename-block" class="btn btn-small btn-secondary" title="Rename Block ID">
+                            <i class="fas fa-pen"></i> Rename
+                        </button>
+                        <button id="btn-delete-block" class="btn btn-small btn-danger" title="Delete Block">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mode Tabs -->
+                <div class="mode-tabs">
+                    <button class="mode-tab active" data-mode="code"><i class="fas fa-code"></i> Code Mode</button>
+                    <button class="mode-tab" data-mode="visual"><i class="fas fa-th-large"></i> Visual Mode</button>
+                    <button class="mode-tab" data-mode="prompt"><i class="fas fa-robot"></i> AI Prompt</button>
+                </div>
+
+                <div class="editor-layout">
+                    <!-- Main Editors (Code Mode) -->
+                    <div class="main-editors" id="mode-code">
+                        <div class="panel panel-generators panel-generators-main">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-cogs"></i> Code Editors</h3>
+                            </div>
+                            <div class="gen-tabs">
+                                <button class="gen-tab active" data-gen="definition">Definition</button>
+                                <button class="gen-tab" data-gen="arduino">Arduino C++</button>
+                                <button class="gen-tab" data-gen="python">Python</button>
+                                <button class="gen-tab" data-gen="java">Java</button>
+                                <button class="gen-tab" data-gen="emmiScript">Command Script</button>
+                            </div>
+                            <div class="gen-editors">
+                                <textarea id="editor-definition" class="code-textarea gen-editor active"
+                                    spellcheck="false"
+                                    placeholder="// Write your Blockly block definition here...&#10;// e.g. Blockly.Blocks['my_block'] = { init: function() { ... } };"></textarea>
+                                <textarea id="gen-arduino" class="code-textarea gen-editor" spellcheck="false"
+                                    placeholder="// Arduino C++ generator code&#10;// e.g. arduinoGenerator.forBlock['my_block'] = function(block) { ... };"></textarea>
+                                <textarea id="gen-python" class="code-textarea gen-editor" spellcheck="false"
+                                    placeholder="# Python generator code&#10;# e.g. pythonGenerator.forBlock['my_block'] = function(block) { ... };"></textarea>
+                                <textarea id="gen-java" class="code-textarea gen-editor" spellcheck="false"
+                                    placeholder="// Java generator code&#10;// e.g. javaGenerator.forBlock['my_block'] = function(block) { ... };"></textarea>
+                                <div id="gen-emmiScript" class="gen-editor command-editor">
+                                    <!-- State Mapping UI (No-Code) -->
+                                    <div class="state-mapping-section">
+                                        <div class="state-mapping-header">
+                                            <div class="state-mapping-title">
+                                                <i class="fas fa-map-signs"></i> State Mapping
+                                            </div>
+                                            <div class="state-mapping-actions">
+                                                <div class="state-init-field">
+                                                    <label>Init Token</label>
+                                                    <input type="text" id="state-init-token" placeholder="e.g. E"
+                                                        spellcheck="false" />
+                                                </div>
+                                                <button id="btn-detect-states" class="btn btn-small btn-primary"
+                                                    title="Detect dropdown fields from block definition">
+                                                    <i class="fas fa-sync"></i> Detect States
+                                                </button>
+                                                <button id="btn-apply-state-mapping" class="btn btn-small btn-success"
+                                                    title="Generate command code from state mapping">
+                                                    <i class="fas fa-check"></i> Apply to Code
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div id="state-mapping-container">
+                                            <!-- Dynamically populated by JS -->
+                                            <div class="state-mapping-empty">
+                                                <i class="fas fa-info-circle"></i> Click <b>Detect States</b> or switch
+                                                to this tab after previewing a block.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Raw code editor -->
+                                    <textarea id="gen-command" class="code-textarea command-code-textarea"
+                                        spellcheck="false"
+                                        placeholder="// Write command generator code here...&#10;// Or use the State Mapping UI above to auto-generate."></textarea>
+                                    <div class="command-preview-wrap">
+                                        <label for="command-script-preview"><i class="fas fa-terminal"></i> Command
+                                            Script Preview</label>
+                                        <textarea id="command-script-preview" class="code-textarea command-output"
+                                            spellcheck="false" readonly placeholder="|I||S||L|"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Builder (Visual Mode) -->
+                    <div class="main-editors hidden" id="mode-visual">
+                        <div class="panel panel-generators panel-generators-main">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-th-large"></i> Visual Block Builder</h3>
+                                <button id="btn-visual-generate" class="btn btn-small btn-success"
+                                    title="Generate code from visual settings">
+                                    <i class="fas fa-magic"></i> Generate & Apply
+                                </button>
+                            </div>
+                            <div class="visual-builder-scroll">
+                                <!-- Block Settings -->
+                                <div class="vb-section">
+                                    <h4 class="vb-section-title">Block Settings</h4>
+                                    <div class="vb-row">
+                                        <div class="vb-field">
+                                            <label>Block ID</label>
+                                            <input type="text" id="vb-block-id" placeholder="e.g., my_custom_block" />
+                                        </div>
+                                        <div class="vb-field">
+                                            <label>Block Type</label>
+                                            <select id="vb-block-type">
+                                                <option value="statement">Statement (prev + next)</option>
+                                                <option value="value">Value (output)</option>
+                                                <option value="hat">Hat (no connections)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="vb-row">
+                                        <div class="vb-field">
+                                            <label>Color</label>
+                                            <input type="color" id="vb-color" value="#00838F" />
+                                        </div>
+                                        <div class="vb-field" id="vb-output-type-wrap">
+                                            <label>Output Type</label>
+                                            <select id="vb-output-type">
+                                                <option value="Number">Number</option>
+                                                <option value="String">String</option>
+                                                <option value="Boolean">Boolean</option>
+                                                <option value="">Any</option>
+                                            </select>
+                                        </div>
+                                        <div class="vb-field">
+                                            <label>Inline Inputs</label>
+                                            <select id="vb-inline">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                                <option value="auto">Auto</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="vb-row">
+                                        <div class="vb-field vb-field-full">
+                                            <label>Tooltip</label>
+                                            <input type="text" id="vb-tooltip" placeholder="Block description..." />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Inputs & Fields -->
+                                <div class="vb-section">
+                                    <div class="vb-section-header">
+                                        <h4 class="vb-section-title">Inputs & Fields</h4>
+                                        <button id="btn-vb-add-input" class="btn btn-small btn-primary"
+                                            title="Add Input">
+                                            <i class="fas fa-plus"></i> Add Input
+                                        </button>
+                                    </div>
+                                    <div id="vb-inputs-container">
+                                        <!-- Dynamic input rows rendered by JS -->
+                                    </div>
+                                </div>
+
+                                <!-- Code Templates -->
+                                <div class="vb-section">
+                                    <h4 class="vb-section-title">Code Templates</h4>
+                                    <div class="vb-code-templates">
+                                        <div class="vb-code-template">
+                                            <label><i class="fas fa-microchip"></i> Arduino C++</label>
+                                            <textarea id="vb-arduino-template" class="code-textarea vb-code-area"
+                                                spellcheck="false"
+                                                placeholder="e.g., digitalWrite({PIN}, {STATE});"></textarea>
+                                        </div>
+                                        <div class="vb-code-template">
+                                            <label><i class="fab fa-python"></i> Python</label>
+                                            <textarea id="vb-python-template" class="code-textarea vb-code-area"
+                                                spellcheck="false"
+                                                placeholder="e.g., Pin({PIN}, Pin.OUT).value({STATE})"></textarea>
+                                        </div>
+                                        <div class="vb-code-template">
+                                            <label><i class="fab fa-java"></i> Java</label>
+                                            <textarea id="vb-java-template" class="code-textarea vb-code-area"
+                                                spellcheck="false"
+                                                placeholder="e.g., gpio.digitalWrite({PIN}, GPIO.{STATE});"></textarea>
+                                        </div>
+                                        <div class="vb-code-template">
+                                            <label><i class="fas fa-terminal"></i> EMMI Command</label>
+                                            <textarea id="vb-emmi-template" class="code-textarea vb-code-area"
+                                                spellcheck="false"
+                                                placeholder="e.g., registry['{BLOCK_ID}'] = { init: 'E', main: ['ERN'] };"></textarea>
+                                        </div>
+                                    </div>
+                                    <p class="vb-hint">Use <code>{FIELD_NAME}</code> placeholders matching your field
+                                        names above. For value inputs use <code>{INPUT_NAME}</code>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Prompt Mode -->
+                    <div class="main-editors hidden" id="mode-prompt">
+                        <div class="panel panel-generators panel-generators-main">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-robot"></i> AI Block Generator</h3>
+                            </div>
+                            <div class="visual-builder-scroll">
+                                <div class="vb-section">
+                                    <h4 class="vb-section-title">Describe Your Block</h4>
+                                    <div class="vb-row">
+                                        <div class="vb-field vb-field-full">
+                                            <label>What should this block do?</label>
+                                            <textarea id="ai-block-description"
+                                                class="code-textarea ai-description-area" spellcheck="false"
+                                                placeholder="e.g., Read temperature from DHT11 sensor on a configurable pin and return the value in Celsius..."></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="vb-row">
+                                        <div class="vb-field">
+                                            <label>Block Type</label>
+                                            <select id="ai-block-type">
+                                                <option value="statement">Statement (action)</option>
+                                                <option value="value">Value (returns data)</option>
+                                            </select>
+                                        </div>
+                                        <div class="vb-field">
+                                            <label>Block ID (optional)</label>
+                                            <input type="text" id="ai-block-id" placeholder="e.g., dht11_read_temp" />
+                                        </div>
+                                    </div>
+                                    <div class="ai-prompt-actions">
+                                        <button id="btn-copy-prompt" class="btn btn-primary">
+                                            <i class="fas fa-copy"></i> Copy Prompt to Clipboard
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="vb-section">
+                                    <h4 class="vb-section-title">Paste AI Sections</h4>
+                                    <p class="vb-hint">Paste each section separately, including the Command Generator
+                                        code.</p>
+                                    <div class="ai-code-grid">
+                                        <div class="ai-code-card">
+                                            <label for="ai-response-definition">1. Block Definition
+                                                (Blockly.Blocks)</label>
+                                            <textarea id="ai-response-definition" class="code-textarea ai-code-editor"
+                                                spellcheck="false"
+                                                placeholder="Paste block definition code..."></textarea>
+                                        </div>
+
+                                        <div class="ai-code-card">
+                                            <label for="ai-response-arduino">2. Arduino Code Generator</label>
+                                            <textarea id="ai-response-arduino" class="code-textarea ai-code-editor"
+                                                spellcheck="false"
+                                                placeholder="Paste arduinoGenerator.forBlock[...] code..."></textarea>
+                                        </div>
+
+                                        <div class="ai-code-card">
+                                            <label for="ai-response-python">3. Python Code Generator</label>
+                                            <textarea id="ai-response-python" class="code-textarea ai-code-editor"
+                                                spellcheck="false"
+                                                placeholder="Paste pythonGenerator.forBlock[...] code..."></textarea>
+                                        </div>
+
+                                        <div class="ai-code-card">
+                                            <label for="ai-response-java">4. Java Code Generator</label>
+                                            <textarea id="ai-response-java" class="code-textarea ai-code-editor"
+                                                spellcheck="false"
+                                                placeholder="Paste javaGenerator.forBlock[...] code..."></textarea>
+                                        </div>
+
+                                        <div class="ai-code-card">
+                                            <label for="ai-response-command">5. Command Generator</label>
+                                            <textarea id="ai-response-command" class="code-textarea ai-code-editor"
+                                                spellcheck="false"
+                                                placeholder="// Paste command generator code...&#10;// e.g. registry['block_id'] = { init: 'E', main: 'ERN' };"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="ai-prompt-actions">
+                                        <button id="btn-apply-ai-response" class="btn btn-success">
+                                            <i class="fas fa-check"></i> Apply Pasted Code to Editors
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Side: Preview + Console -->
+                    <div class="side-stack">
+                        <div class="panel panel-preview panel-preview-side">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-eye"></i> Block Preview</h3>
+                                <button id="btn-refresh-preview" class="btn btn-small btn-primary"
+                                    title="Refresh Preview (Ctrl+Enter)">
+                                    <i class="fas fa-sync"></i>
+                                </button>
+                            </div>
+                            <div class="panel-body">
+                                <div id="preview-workspace" class="preview-workspace-area"></div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-side-code-preview">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-code"></i> Code Preview</h3>
+                            </div>
+                            <div class="side-code-tabs">
+                                <button class="side-code-tab active" data-preview-lang="arduino">Arduino</button>
+                                <button class="side-code-tab" data-preview-lang="python">Python</button>
+                                <button class="side-code-tab" data-preview-lang="java">Java</button>
+                            </div>
+                            <div class="side-code-editors">
+                                <textarea id="preview-code-arduino" class="code-textarea side-code-editor active"
+                                    spellcheck="false" readonly></textarea>
+                                <textarea id="preview-code-python" class="code-textarea side-code-editor"
+                                    spellcheck="false" readonly></textarea>
+                                <textarea id="preview-code-java" class="code-textarea side-code-editor"
+                                    spellcheck="false" readonly></textarea>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-console panel-console-side">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-terminal"></i> Console</h3>
+                                <button id="btn-clear-console" class="btn btn-small btn-secondary"
+                                    title="Clear Console">
+                                    <i class="fas fa-eraser"></i>
+                                </button>
+                            </div>
+                            <div id="error-console" class="console-output">
+                                <div class="console-line console-info">Ready.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal: Cloud Settings -->
+    <div id="modal-cloud" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>AWS Cloud Settings</h3>
+                <button class="btn-close" data-modal="modal-cloud">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>AWS Access Key ID</label>
+                    <input type="text" id="cloud-access-key" placeholder="AKIA..." />
+                </div>
+                <div class="form-group">
+                    <label>AWS Secret Access Key</label>
+                    <input type="password" id="cloud-secret-key" placeholder="AWS Secret" />
+                </div>
+                <div class="form-group">
+                    <label>AWS Region</label>
+                    <input type="text" id="cloud-region" placeholder="ap-south-1" />
+                </div>
+                <div class="form-group">
+                    <label>S3 Bucket Name</label>
+                    <input type="text" id="cloud-bucket" placeholder="my-emmi-bucket" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-modal="modal-cloud">Cancel</button>
+                <button id="btn-save-cloud" class="btn btn-primary">Save Cloud Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: New Board -->
+    <div id="modal-board" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>New Board</h3>
+                <button class="btn-close" data-modal="modal-board">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Board ID</label>
+                    <input type="text" id="input-board-id" placeholder="e.g., emmi-bot-v3" />
+                </div>
+                <div class="form-group">
+                    <label>Board Name (optional)</label>
+                    <input type="text" id="input-board-name" placeholder="e.g., EMMI BOT V3" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-modal="modal-board">Cancel</button>
+                <button id="btn-save-board" class="btn btn-primary">Create Board</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: New Category -->
+    <div id="modal-category" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>New Category</h3>
+                <button class="btn-close" data-modal="modal-category">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Board</label>
+                    <select id="input-category-board"></select>
+                </div>
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input type="text" id="input-category-name" placeholder="e.g., Eyes" />
+                </div>
+                <div class="form-group">
+                    <label>Colour</label>
+                    <input type="color" id="input-category-colour" value="#424242" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-modal="modal-category">Cancel</button>
+                <button id="btn-save-category" class="btn btn-primary">Create Category</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: New Block -->
+    <div id="modal-block" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>New Block</h3>
+                <button class="btn-close" data-modal="modal-block">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Board</label>
+                    <select id="input-block-board"></select>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="input-block-category"></select>
+                </div>
+                <div class="form-group">
+                    <label>Target File</label>
+                    <select id="input-block-file"></select>
+                </div>
+                <div class="form-group">
+                    <label>Template</label>
+                    <select id="input-block-template"></select>
+                </div>
+                <div class="form-group">
+                    <label>Block ID (unique identifier)</label>
+                    <input type="text" id="input-block-id" placeholder="e.g., emmi_eyes_on" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-modal="modal-block">Cancel</button>
+                <button id="btn-create-block" class="btn btn-primary">Create Block</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Rename Block -->
+    <div id="modal-rename" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Rename Block</h3>
+                <button class="btn-close" data-modal="modal-rename">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>New Block ID</label>
+                    <input type="text" id="input-rename-id" placeholder="new_block_id" />
+                </div>
+                <p class="form-hint">Warning: You must also update the block ID inside your JavaScript code manually.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-modal="modal-rename">Cancel</button>
+                <button id="btn-confirm-rename" class="btn btn-primary">Rename</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Add Field (Visual Builder) -->
+    <div id="modal-vb-field" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Field</h3>
+                <button class="btn-close" data-modal="modal-vb-field">&times;</button>
+            </div>
+            <div class="modal-body vb-field-config">
+                <div class="form-group">
+                    <label>Field Type</label>
+                    <select id="vb-field-type">
+                        <option value="label">Text Label</option>
+                        <option value="dropdown">Dropdown</option>
+                        <option value="number">Number Input</option>
+                        <option value="checkbox">Checkbox</option>
+                        <option value="textinput">Text Input</option>
+                        <option value="variable">Variable</option>
+                    </select>
+                </div>
+                <div class="form-group" id="vb-field-name-group">
+                    <label>Field Name (variable name for code)</label>
+                    <input type="text" id="vb-field-name" placeholder="e.g., PIN, STATE, VALUE" />
+                </div>
+                <div class="form-group">
+                    <label>Label / Default Text</label>
+                    <input type="text" id="vb-field-label" placeholder="e.g., digital write" />
+                </div>
+                <div class="form-group hidden" id="vb-field-options-group">
+                    <label>Dropdown Options (label=value, one per line)</label>
+                    <textarea id="vb-field-options" class="code-textarea"
+                        style="height:80px;border:1px solid var(--border-color);border-radius:5px;" spellcheck="false"
+                        placeholder="HIGH=HIGH&#10;LOW=LOW&#10;Pin 2=2&#10;Pin 4=4"></textarea>
+                </div>
+                <div class="form-group hidden" id="vb-field-number-group">
+                    <label>Number Settings (default, min, max)</label>
+                    <div style="display:flex;gap:8px;">
+                        <input type="number" id="vb-field-num-default" placeholder="0" style="flex:1;" />
+                        <input type="number" id="vb-field-num-min" placeholder="0" style="flex:1;" />
+                        <input type="number" id="vb-field-num-max" placeholder="39" style="flex:1;" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-modal="modal-vb-field">Cancel</button>
+                <button id="btn-vb-add-field-confirm" class="btn btn-primary">Add Field</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generators (same as main app) -->
+    <script src="js/generators/arduino.js"></script>
+    <script src="js/generators/python.js"></script>
+    <script src="js/generators/java.js"></script>
+    <script src="js/commands/common_commands.js"></script>
+    <script src="js/commands/emmi-bot-v2_commands.js?v=2"></script>
+    <script src="js/generators/emmi_exporter.js?v=26"></script>
+
+    <!-- Blocks & Toolbox (same as main app) -->
+    <script src="js/toolbox.js"></script>
+    <script src="blocks/esp32_blocks.js"></script>
+    <script src="blocks/variable_blocks.js"></script>
+    <script src="blocks/communication_blocks.js"></script>
+    <script src="blocks/emmi-bot-v2_blocks.js"></script>
+    <script src="blocks/emmi-bipedal_blocks.js"></script>
+    <script src="blocks/explorer-kit_blocks.js"></script>
+    <script src="js/generators/variable_generators.js"></script>
+    <script src="js/generators/communication_generators.js"></script>
+    <script src="js/generators/emmi-bot-v2_generators.js"></script>
+
+    <script src="js/custom_styles.js"></script>
+
+    <!-- Block Creator -->
+    <script src="js/block-creator.js"></script>
+</body>
+
+</html>

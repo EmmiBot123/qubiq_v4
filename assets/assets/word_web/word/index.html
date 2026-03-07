@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Segoe+UI:wght@300;400;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Main Header / Title Bar -->
+        <header class="title-bar">
+            <div class="app-icon"><i class="fas fa-file-word"></i></div>
+            <div class="doc-title" contenteditable="true">Document1 - Word</div>
+
+        </header>
+
+        <!-- Ribbon Toolbar -->
+        <nav class="ribbon">
+            <div class="ribbon-tabs">
+                <button class="tab-btn" data-tab="file">File</button>
+                <button class="tab-btn active" data-tab="home">Home</button>
+                <button class="tab-btn" data-tab="insert">Insert</button>
+                <button class="tab-btn" data-tab="layout">Layout</button>
+                <button class="tab-btn" data-tab="references">References</button>
+                <button class="tab-btn" data-tab="review">Review</button>
+                <button class="tab-btn" data-tab="view">View</button>
+                <button class="tab-btn" data-tab="help">Help</button>
+            </div>
+
+            <div class="ribbon-content">
+                <!-- Home Tab Content -->
+                <div class="ribbon-pane active" id="pane-home">
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn small" onclick="execCmd('undo')" title="Undo (Ctrl+Z)">
+                                <i class="fas fa-undo"></i> <span>Undo</span>
+                            </button>
+                            <button class="tool-btn small" onclick="execCmd('redo')" title="Redo (Ctrl+Y)">
+                                <i class="fas fa-redo"></i> <span>Redo</span>
+                            </button>
+                        </div>
+                        <div class="group-label">History</div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="execCmd('paste')">
+                                <i class="fas fa-paste"></i>
+                                <span>Paste</span>
+                            </button>
+                            <div class="tool-column">
+                                <button class="tool-btn small" onclick="execCmd('cut')">
+                                    <i class="fas fa-cut"></i> <span>Cut</span>
+                                </button>
+                                <button class="tool-btn small" onclick="execCmd('copy')">
+                                    <i class="fas fa-copy"></i> <span>Copy</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="group-label">Clipboard</div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <select id="fontName" class="font-select" onchange="execCmd('fontName', this.value)">
+                                <option value="Segoe UI">Segoe UI</option>
+                                <option value="Arial">Arial</option>
+                                <option value="Calibri">Calibri</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                            </select>
+                            <select id="fontSize" class="size-select" onchange="execCmd('fontSize', this.value)">
+                                <option value="1">8</option>
+                                <option value="2">10</option>
+                                <option value="3" selected>12</option>
+                                <option value="4">14</option>
+                                <option value="5">18</option>
+                                <option value="6">24</option>
+                                <option value="7">36</option>
+                            </select>
+                        </div>
+                        <div class="tool-row tiny-buttons">
+                            <button class="tool-btn toggle" onclick="execCmd('bold')" title="Bold (Ctrl+B)"><i
+                                    class="fas fa-bold"></i></button>
+                            <button class="tool-btn toggle" onclick="execCmd('italic')" title="Italic (Ctrl+I)"><i
+                                    class="fas fa-italic"></i></button>
+                            <button class="tool-btn toggle" onclick="execCmd('underline')" title="Underline (Ctrl+U)"><i
+                                    class="fas fa-underline"></i></button>
+                            <button class="tool-btn toggle" onclick="execCmd('strikeThrough')"><i
+                                    class="fas fa-strikethrough"></i></button>
+                            <div class="divider-small"></div>
+                            <div class="color-picker-wrapper" title="Font Color">
+                                <label for="foreColor"><i class="fas fa-font"></i>
+                                    <div class="color-bar" id="fontColorBar"></div>
+                                </label>
+                                <input type="color" id="foreColor" onchange="execCmd('foreColor', this.value)"
+                                    style="display:none">
+                            </div>
+                            <div class="color-picker-wrapper" title="Text Highlight Color">
+                                <label for="hiliteColor"><i class="fas fa-highlighter"></i>
+                                    <div class="color-bar highlight" id="highlightColorBar"></div>
+                                </label>
+                                <input type="color" id="hiliteColor" onchange="execCmd('hiliteColor', this.value)"
+                                    style="display:none" value="#ffff00">
+                            </div>
+                        </div>
+                        <div class="group-label">Font</div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="tool-group">
+                        <div class="tool-row tiny-buttons">
+                            <button class="tool-btn" onclick="execCmd('insertUnorderedList')"><i
+                                    class="fas fa-list-ul"></i></button>
+                            <button class="tool-btn" onclick="execCmd('insertOrderedList')"><i
+                                    class="fas fa-list-ol"></i></button>
+                            <div class="divider-small"></div>
+                            <button class="tool-btn" onclick="execCmd('outdent')"><i
+                                    class="fas fa-outdent"></i></button>
+                            <button class="tool-btn" onclick="execCmd('indent')"><i class="fas fa-indent"></i></button>
+                        </div>
+                        <div class="tool-row tiny-buttons">
+                            <button class="tool-btn" onclick="execCmd('justifyLeft')"><i
+                                    class="fas fa-align-left"></i></button>
+                            <button class="tool-btn" onclick="execCmd('justifyCenter')"><i
+                                    class="fas fa-align-center"></i></button>
+                            <button class="tool-btn" onclick="execCmd('justifyRight')"><i
+                                    class="fas fa-align-right"></i></button>
+                            <button class="tool-btn" onclick="execCmd('justifyFull')"><i
+                                    class="fas fa-align-justify"></i></button>
+                        </div>
+                        <div class="group-label">Paragraph</div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="tool-group styles-group">
+                        <div class="tool-row style-buttons">
+                            <div class="style-box active" data-style="p">
+                                <div class="style-preview">AaBbCc</div>
+                                <span>Normal</span>
+                            </div>
+                            <div class="style-box" data-style="h1">
+                                <div class="style-preview h1">AaBbCc</div>
+                                <span>Heading 1</span>
+                            </div>
+                            <div class="style-box" data-style="h2">
+                                <div class="style-preview h2">AaBbCc</div>
+                                <span>Heading 2</span>
+                            </div>
+                        </div>
+                        <div class="group-label">Styles</div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="tool-group">
+                        <div class="tool-column">
+                            <button class="tool-btn small" onclick="openFindModal()">
+                                <i class="fas fa-search"></i>
+                                <span>Find</span>
+                            </button>
+                            <button class="tool-btn small" onclick="openFindModal()">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>Replace</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Editing</div>
+                    </div>
+                </div>
+
+                <!-- File Tab Content -->
+                <div class="ribbon-pane" id="pane-file">
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="window.location.reload()">
+                                <i class="fas fa-file"></i>
+                                <span>New</span>
+                            </button>
+                            <button class="tool-btn large" onclick="saveDocument()">
+                                <i class="fas fa-save"></i>
+                                <span>Save</span>
+                            </button>
+                            <button class="tool-btn large" onclick="window.print()">
+                                <i class="fas fa-print"></i>
+                                <span>Print</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Document</div>
+                    </div>
+                </div>
+
+                <!-- Insert Tab Content -->
+                <div class="ribbon-pane" id="pane-insert">
+                    <!-- Pages Group -->
+                    <div class="tool-group">
+                        <div class="tool-column">
+                            <button class="tool-btn small" onclick="insertBlankPage()">
+                                <i class="fas fa-file"></i> <span>Blank Page</span>
+                            </button>
+                            <button class="tool-btn small" onclick="insertPageBreak()">
+                                <i class="fas fa-file-export"></i> <span>Page Break</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Pages</div>
+                    </div>
+                    <div class="divider"></div>
+
+                    <!-- Tables Group -->
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="toggleTablePicker(event)">
+                                <i class="fas fa-table"></i>
+                                <span>Table</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Tables</div>
+                    </div>
+                    <div class="divider"></div>
+
+                    <!-- Illustrations Group -->
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="document.getElementById('imgUpload').click()">
+                                <i class="fas fa-image"></i>
+                                <span>Pictures</span>
+                            </button>
+                            <div class="tool-column">
+                                <button class="tool-btn small" onclick="insertIcon()">
+                                    <i class="fas fa-icons"></i> <span>Icons</span>
+                                </button>
+                                <button class="tool-btn small" onclick="insertShape()">
+                                    <i class="fas fa-shapes"></i> <span>Shapes</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="group-label">Illustrations</div>
+                    </div>
+                    <div class="divider"></div>
+
+                    <!-- Links Group -->
+                    <div class="tool-group">
+                        <div class="tool-column">
+                            <button class="tool-btn small" onclick="execCmd('createLink', prompt('Enter URL:'))">
+                                <i class="fas fa-link"></i> <span>Link</span>
+                            </button>
+                            <button class="tool-btn small" onclick="insertBookmark()">
+                                <i class="fas fa-bookmark"></i> <span>Bookmark</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Links</div>
+                    </div>
+                    <div class="divider"></div>
+
+                    <!-- Header & Footer Group -->
+                    <div class="tool-group">
+                        <div class="tool-column">
+                            <button class="tool-btn small" onclick="openHeader()">
+                                <i class="fas fa-heading"></i> <span>Header</span>
+                            </button>
+                            <button class="tool-btn small" onclick="openFooter()">
+                                <i class="fas fa-shoe-prints"></i> <span>Footer</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Header & Footer</div>
+                    </div>
+                    <div class="divider"></div>
+
+                    <!-- Text Group -->
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="insertTextBox()">
+                                <i class="fas fa-font"></i>
+                                <span>Text Box</span>
+                            </button>
+                            <div class="tool-column">
+                                <button class="tool-btn small" onclick="insertWordArt()">
+                                    <i class="fas fa-italic"></i> <span>WordArt</span>
+                                </button>
+                                <button class="tool-btn small" onclick="insertDateTime()">
+                                    <i class="fas fa-clock"></i> <span>Date/Time</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="group-label">Text</div>
+                    </div>
+                    <div class="divider"></div>
+
+                    <!-- Symbols Group -->
+                    <div class="tool-group">
+                        <div class="tool-column">
+                            <button class="tool-btn small" onclick="insertEquation()">
+                                <i class="fas fa-pi"></i> <span>Equation</span>
+                            </button>
+                            <button class="tool-btn small" onclick="toggleSymbolPicker()">
+                                <i class="fas fa-omega"></i> <span>Symbol</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Symbols</div>
+                    </div>
+
+                    <!-- Hidden Elements for Insert -->
+                    <input type="file" id="imgUpload" style="display:none" accept="image/*"
+                        onchange="uploadImage(this)">
+                </div>
+
+                <!-- Layout Tab Content -->
+                <div class="ribbon-pane" id="pane-layout">
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="setMargins('narrow')">
+                                <i class="fas fa-columns"></i>
+                                <span>Margins</span>
+                            </button>
+                            <button class="tool-btn large" onclick="toggleOrientation()">
+                                <i class="fas fa-file"></i>
+                                <span>Orientation</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Page Setup</div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="setLineSpacing(1.0)">
+                                <i class="fas fa-arrows-alt-v"></i>
+                                <span>Spacing</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Paragraph</div>
+                    </div>
+                </div>
+
+                <!-- References Tab Content -->
+                <div class="ribbon-pane" id="pane-references">
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="generateTOC()">
+                                <i class="fas fa-list-ol"></i>
+                                <span>Table of Contents</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Table of Contents</div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="insertFootnote()">
+                                <i class="fas fa-quote-right"></i>
+                                <span>Insert Footnote</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Footnotes</div>
+                    </div>
+                </div>
+
+                <!-- Review Tab Content -->
+                <div class="ribbon-pane" id="pane-review">
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="showWordCount()">
+                                <i class="fas fa-calculator"></i>
+                                <span>Word Count</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Proofing</div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="toggleReadAloud()">
+                                <i class="fas fa-volume-up"></i>
+                                <span>Read Aloud</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Speech</div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="lookupThesaurus()">
+                                <i class="fas fa-book"></i>
+                                <span>Thesaurus</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Reference</div>
+                    </div>
+                </div>
+
+                <!-- View Tab Content -->
+                <div class="ribbon-pane" id="pane-view">
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="toggleFocusMode()">
+                                <i class="fas fa-expand-arrows-alt"></i>
+                                <span>Focus</span>
+                            </button>
+                            <button class="tool-btn large"
+                                onclick="document.getElementById('editor').classList.toggle('dark-mode')">
+                                <i class="fas fa-moon"></i>
+                                <span>Dark Mode</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Views</div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="toggleNavPane()">
+                                <i class="fas fa-list-ul"></i>
+                                <span>Nav Pane</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Show</div>
+                    </div>
+                </div>
+
+                <!-- Help Tab Content -->
+                <div class="ribbon-pane" id="pane-help">
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <button class="tool-btn large" onclick="openShortcutsModal()">
+                                <i class="fas fa-keyboard"></i>
+                                <span>Shortcuts</span>
+                            </button>
+                        </div>
+                        <div class="group-label">Help</div>
+                    </div>
+                </div>
+            </div> <!-- Close ribbon-content -->
+        </nav> <!-- Close ribbon -->
+
+        <!-- Editor Area with Sidebar -->
+        <main class="main-content-area">
+            <aside class="nav-pane" id="navPane">
+                <div class="nav-pane-header">Navigation</div>
+                <div class="nav-pane-content" id="navContent">
+                    <p class="nav-placeholder">Headings will appear here.</p>
+                </div>
+            </aside>
+            <div class="editor-viewport" style="position: relative;">
+                <div class="ruler-horizontal"></div>
+                <div class="page-container">
+                    <article id="editor" class="paper" contenteditable="true" style="position: relative;">
+                        <div class="header-area" contenteditable="true" data-placeholder="Header..."></div>
+                        <div class="editor-content">
+                            <h1>Welcome to Word</h1>
+                            <p>Start typing here to create your document. You can use the toolbar above to format your
+                                text.</p>
+                        </div>
+                        <div class="footer-area" contenteditable="true" data-placeholder="Footer..."></div>
+                    </article>
+                </div>
+            </div>
+        </main>
+
+        <!-- Status Bar -->
+        <footer class="status-bar">
+            <div class="status-left">
+                <span>Page 1 of 1</span>
+                <span>0 words</span>
+            </div>
+            <div class="status-right">
+                <button class="status-btn"><i class="fas fa-print"></i></button>
+                <div class="zoom-controls">
+                    <i class="fas fa-minus" id="zoomOut"></i>
+                    <input type="range" min="50" max="200" value="100" id="zoomSlider">
+                    <i class="fas fa-plus" id="zoomIn"></i>
+                    <span id="zoomPercent">100%</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Find & Replace Modal -->
+    <div class="modal-overlay" id="findModal">
+        <div class="modal">
+            <h3>Find and Replace</h3>
+            <input type="text" id="findInput" placeholder="Find what...">
+            <input type="text" id="replaceInput" placeholder="Replace with...">
+            <div class="modal-btns">
+                <button class="modal-btn" onclick="closeFindModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="findText()">Find Next</button>
+                <button class="modal-btn primary" onclick="replaceText()">Replace</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shortcuts Modal -->
+    <div class="modal-overlay" id="shortcutsModal">
+        <div class="modal large">
+            <h3>Keyboard Shortcuts</h3>
+            <div class="shortcuts-grid">
+                <div class="shortcut-item"><span>Bold</span><kbd>Ctrl + B</kbd></div>
+                <div class="shortcut-item"><span>Italic</span><kbd>Ctrl + I</kbd></div>
+                <div class="shortcut-item"><span>Underline</span><kbd>Ctrl + U</kbd></div>
+                <div class="shortcut-item"><span>Save</span><kbd>Ctrl + S</kbd></div>
+                <div class="shortcut-item"><span>Undo</span><kbd>Ctrl + Z</kbd></div>
+                <div class="shortcut-item"><span>Redo</span><kbd>Ctrl + Y</kbd></div>
+                <div class="shortcut-item"><span>Find</span><kbd>Ctrl + F</kbd></div>
+                <div class="shortcut-item"><span>Full Screen</span><kbd>F11</kbd></div>
+            </div>
+            <div class="modal-btns">
+                <button class="modal-btn primary" onclick="closeShortcutsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Context Menu -->
+    <div id="customContextMenu" class="context-menu">
+        <div class="context-item" onclick="execCmd('bold')"><i class="fas fa-bold"></i> Bold</div>
+        <div class="context-item" onclick="execCmd('italic')"><i class="fas fa-italic"></i> Italic</div>
+        <div class="context-item" onclick="execCmd('underline')"><i class="fas fa-underline"></i> Underline</div>
+        <div class="context-divider"></div>
+        <div class="context-item" onclick="execCmd('copy')"><i class="fas fa-copy"></i> Copy</div>
+        <div class="context-item" onclick="execCmd('paste')"><i class="fas fa-paste"></i> Paste</div>
+        <div class="context-divider"></div>
+        <div class="context-item" onclick="toggleReadAloud()"><i class="fas fa-volume-up"></i> Read Selection</div>
+    </div>
+
+    <!-- Mini Selection Toolbar -->
+    <div id="miniToolbar" class="mini-toolbar">
+        <button class="mini-btn" onclick="execCmd('bold')"><i class="fas fa-bold"></i></button>
+        <button class="mini-btn" onclick="execCmd('italic')"><i class="fas fa-italic"></i></button>
+        <button class="mini-btn font-color" onclick="document.getElementById('foreColor').click()"><i
+                class="fas fa-font"></i></button>
+        <div class="mini-divider"></div>
+        <button class="mini-btn" onclick="execCmd('formatBlock', 'h1')">H1</button>
+        <button class="mini-btn" onclick="execCmd('formatBlock', 'h2')">H2</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
