@@ -75,7 +75,7 @@ class _WordWebViewScreenState extends State<WordWebViewScreen> {
                   initialUrlRequest: URLRequest(
                     url: WebUri(
                       kIsWeb
-                          ? "assets/word_web/word/index.html"
+                          ? "assets/assets/word_web/word/index.html"
                           : "http://127.0.0.1:8085/index.html",
                     ),
                   ),
