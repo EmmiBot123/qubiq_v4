@@ -127,6 +127,7 @@ flutter:
     - lib/Resources/loopIcons/repeatblock.png
     - ./lib/Resources/loopIcons/Repeat.svg
     - ./lib/Resources/loopIcons/repeatsvg.svg
+    - assets/images/
     - assets/images/qubiq_logo.png
     - assets/pythonide/
     - assets/word_web/word/
