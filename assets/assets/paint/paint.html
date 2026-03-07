@@ -42,7 +42,8 @@
             background: linear-gradient(135deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
             background-size: 300% 300%;
             animation: headerShift 6s ease infinite;
-            padding: 8px 16px;
+            padding: 8px 16px 8px 70px;
+            /* Pad left to clear Flutter back button */
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -75,6 +76,8 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            margin-left: 45px;
+            /* Added to clear Flutter back arrow */
         }
 
         .logo span.bounce {
